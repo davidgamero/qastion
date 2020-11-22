@@ -23,7 +23,7 @@ function App() {
     },
     {
       author: 'David',
-      text: 'Do you know where we saved the updated slide deck? Do you know where we saved the updated slide deck?',
+      text: 'Do you know where we saved the updated slide deck?',
       outgoing: true,
     },
     {
@@ -39,12 +39,26 @@ function App() {
 
   const [suggestions,] = useState([
     {
-      keywords: ['done', 'due', 'deadline'],
+      keywords: ['done', 'due', 'deadline', 'turn', 'slide', 'deck'],
       question: 'When is our new deadline?',
       response: 'The client needs it by 11/29 at 4pm EST',
       responseAuthor: 'Lucas',
       responseTimestamp: '11/6 8:34 AM'
-    }
+    },
+    {
+      keywords: ['saved', 'updated', 'update', 'slide', 'deck', 'location', 'located', 'stored'],
+      question: 'Do you know where we saved the updated slide deck?',
+      response: 'Yea it\'s at slidedecks.com',
+      responseAuthor: 'Lucas',
+      responseTimestamp: '11/6 8:34 AM'
+    },
+    {
+      keywords: ['thanksgiving', 'holiday'],
+      question: 'Do we get thanksgiving off?',
+      response: 'No you can rest when you\'re dead',
+      responseAuthor: 'Mike the Manager',
+      responseTimestamp: '11/6 8:37 AM'
+    },
   ]);
 
   return (
