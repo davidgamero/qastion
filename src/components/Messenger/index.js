@@ -6,7 +6,7 @@ import { useState } from 'react';
 const MessengerFrame = styled.div`
 background-color: #302c30;
 max-width: 700px;
-width: 80%;
+width: 100%;
 justify-content: center;
 justify-items: center;
 `;
