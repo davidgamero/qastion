@@ -1,24 +1,50 @@
 import logo from './logo.svg';
-import './App.css';
+import Messenger from './components/Messenger';
+import React, { useState } from 'react';
+import styled from 'styled-components';
+
+const Frame = styled.div`
+align-content: center;
+align-items: center;
+justify-content: center;
+justify-items: center;
+display: flex;
+`
 
 function App() {
+  const [messages, setMessages] = useState([
+    {
+      author: 'David',
+      text: 'Hey!',
+      outgoing: true,
+    },
+    {
+      author: 'Lucas',
+      text: 'Hello'
+    },
+    {
+      author: 'David',
+      text: 'Do you know where we saved the updated slide deck? Do you know where we saved the updated slide deck?',
+      outgoing: true,
+    },
+    {
+      author: 'Lucas',
+      text: 'Yea it\'s at slidedecks.com'
+    },
+    {
+      author: 'David',
+      text: 'Thanks!',
+      outgoing: true,
+    },
+  ])
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Frame>
+      <Messenger
+        messages={messages}
+        setMessages={setMessages}
+        me="David" />
+    </Frame>
   );
 }
 
