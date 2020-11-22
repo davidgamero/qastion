@@ -1,4 +1,3 @@
-import logo from './logo.svg';
 import Messenger from './components/Messenger';
 import React, { useState } from 'react';
 import styled from 'styled-components';

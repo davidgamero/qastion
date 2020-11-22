@@ -19,7 +19,7 @@ justify-content: center;
 function Messenger({ messages, setMessages }) {
 
   let textChange = (newVal) => {
-    let text = newVal.target.value;
+    //let text = newVal.target.value;
 
 
   }
