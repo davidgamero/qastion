@@ -18,11 +18,11 @@ border-radius: 10px;
 max-width: 80%;
 `
 
-const SenderText = styled.p`
-color: white;
-font-size: 0.8rem;
-margin: 0;
-`
+// const SenderText = styled.p`
+// color: white;
+// font-size: 0.8rem;
+// margin: 0;
+// `
 
 const TimeStampText = styled.p`
 color: lightgrey;
