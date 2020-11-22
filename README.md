@@ -1,9 +1,10 @@
 #  🧠 Qastion
 
-Searchable, accesible tribal knowledge at your fingertips
-
 [Live MVP DEMO](https://qastion.netlify.app)
 
+Searchable, accesible tribal knowledge at your fingertips
+
+![](screenshot/qastion-demo.gif)
 
 ## Functionality
 
