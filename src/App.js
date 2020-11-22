@@ -37,11 +37,22 @@ function App() {
     },
   ])
 
+  const [suggestions,] = useState([
+    {
+      keywords: ['done', 'due', 'deadline'],
+      question: 'When is our new deadline?',
+      response: 'The client needs it by 11/29 at 4pm EST',
+      responseAuthor: 'Lucas',
+      responseTimestamp: '11/6 8:34 AM'
+    }
+  ]);
+
   return (
     <Frame>
       <Messenger
         messages={messages}
         setMessages={setMessages}
+        suggestions={suggestions}
         me="David" />
     </Frame>
   );

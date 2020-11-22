@@ -58,7 +58,7 @@ margin-top: 0;
 `
 
 
-function MessageInput({ onChange, onSend }) {
+function MessageInput({ onChange, onSend, suggestedQA }) {
   const [messageText, setMessageText] = useState('');
 
   let handleChange = (e) => {
@@ -77,15 +77,22 @@ function MessageInput({ onChange, onSend }) {
 
   return (
     <InputForm onSubmit={handleSubmit}>
-      <SuggestionBox>
+      {suggestedQA ? <SuggestionBox>
         <QuastionTitle>
           {'Qastion Suggestion'}
         </QuastionTitle>
         <SuggestionText>
-          {'Similar to: "When is our new deadline?"'}
+          {`Similar to: "${suggestedQA.question}"`}
+        </SuggestionText>
+        <QuastionTitle>
+          {`>  ${suggestedQA.responseAuthor} @ ${suggestedQA.responseTimestamp}`}
+        </QuastionTitle>
+        <SuggestionText>
+          {`> ${suggestedQA.response}`}
         </SuggestionText>
       </SuggestionBox>
-      <TextInput placeholder="Type a new message" onChange={handleChange} />
+        : ''}
+      <TextInput placeholder="What's the new deadline?" onChange={handleChange} />
 
     </InputForm>
   )
