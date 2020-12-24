@@ -17,7 +17,7 @@ flex-direction: row;
 justify-content: center;
 `
 
-function Messenger({ messages, setMessages, suggestions, analyzeMessage }) {
+function Messenger({ messages, setMessages, suggestions, analyzeMessage, pushMessage }) {
 
   const [suggestedQA, setSuggestedQA] = useState();
 
@@ -69,6 +69,13 @@ function Messenger({ messages, setMessages, suggestions, analyzeMessage }) {
         outgoing: true,
       }];
     });
+
+    pushMessage({
+      created_on: Date.now(),
+      text: messageText,
+      author: "David",
+      replies: []
+    })
   }
 
   return (

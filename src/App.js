@@ -2,6 +2,9 @@ import Messenger from './components/Messenger';
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
+import firebase from 'firebase'
+import { FirebaseDatabaseProvider, FirebaseDatabaseNode, FirebaseDatabaseMutation } from '@react-firebase/database';
+import firebaseConfig from './firebaseConfig';
 
 const text_analytics_key = 'e99f8216303f4eb18ca6b145b9e3d7e2';
 const text_analytics_endpoint = 'https://qastion.cognitiveservices.azure.com/';
@@ -101,14 +104,39 @@ function App() {
   ]);
 
   return (
-    <Frame>
-      <Messenger
-        messages={messages}
-        setMessages={setMessages}
-        analyzeMessage={analyzeMessage}
-        suggestions={suggestions}
-        me="David" />
-    </Frame>
+    <FirebaseDatabaseProvider
+      firebase={firebase}
+      {...firebaseConfig}>
+      <FirebaseDatabaseNode
+        path="messages/general"
+        limitToFirst={5}
+        // orderByKey
+        orderByValue={"created_on"}
+      >
+        {
+          d => {
+            console.log(d);
+            return <p>{JSON.stringify(d)}</p>
+          }
+        }
+      </FirebaseDatabaseNode>
+      <FirebaseDatabaseMutation type="push" path={'messages/general'}>
+        {({ runMutation }) => {
+          return (
+            <Frame>
+              <Messenger
+                messages={messages}
+                pushMessage={runMutation}
+                setMessages={setMessages}
+                analyzeMessage={analyzeMessage}
+                suggestions={suggestions}
+                me="David" />
+            </Frame>
+          );
+        }}
+      </FirebaseDatabaseMutation>
+
+    </FirebaseDatabaseProvider>
   );
 }
 
