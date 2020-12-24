@@ -17,7 +17,7 @@ flex-direction: row;
 justify-content: center;
 `
 
-function Messenger({ messages, setMessages, suggestions }) {
+function Messenger({ messages, setMessages, suggestions, analyzeMessage }) {
 
   const [suggestedQA, setSuggestedQA] = useState();
 
@@ -32,11 +32,11 @@ function Messenger({ messages, setMessages, suggestions }) {
 
     let suggestionRanks = suggestions.map((s) => {
       let score = 0;
-      console.log(s);
+      //console.log(s);
 
       if (!s.keywords) {
         console.log('No keywords on suggestion:');
-        console.log(s);
+        //console.log(s);
         return 0;
       }
 
@@ -60,13 +60,15 @@ function Messenger({ messages, setMessages, suggestions }) {
   }
 
   let sendMessage = (messageText) => {
+    //analyzeMessage(messageText);
+
     setMessages((m) => {
       return [...m, {
         author: 'David',
         text: messageText,
         outgoing: true,
       }];
-    })
+    });
   }
 
   return (

@@ -1,6 +1,11 @@
 import Messenger from './components/Messenger';
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import axios from 'axios';
+
+const text_analytics_key = 'e99f8216303f4eb18ca6b145b9e3d7e2';
+const text_analytics_endpoint = 'https://qastion.cognitiveservices.azure.com/';
+const text_key_phrases = 'text/analytics/v2.1/keyPhrases';
 
 const Frame = styled.div`
 align-content: center;
@@ -37,6 +42,40 @@ function App() {
     },
   ])
 
+  const analyzeMessage = (m) => {
+    console.log(`Analyzing "${m}"`);
+
+    let docs = {
+      "documents": [
+        {
+          "language": "en",
+          "id": "1",
+          "text": m
+        }]
+    }
+
+    var data = JSON.stringify(docs);
+
+    var config = {
+      method: 'post',
+      url: text_analytics_endpoint + text_key_phrases,
+      headers: {
+        'Ocp-Apim-Subscription-Key': text_analytics_key,
+        'Content-Type': 'application/json'
+      },
+      data: data
+    };
+
+    axios(config)
+      .then(function (response) {
+        console.log(JSON.stringify(response.data));
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
+
+
   const [suggestions,] = useState([
     {
       keywords: ['done', 'due', 'deadline', 'turn', 'slide', 'deck'],
@@ -66,6 +105,7 @@ function App() {
       <Messenger
         messages={messages}
         setMessages={setMessages}
+        analyzeMessage={analyzeMessage}
         suggestions={suggestions}
         me="David" />
     </Frame>
