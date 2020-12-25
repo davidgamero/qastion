@@ -40,11 +40,16 @@ const messageColor1 = '#5c585c'; // Incoming messages
 const messageColor2 = '#58516b'; // Outgoing messages
 
 function MessageBubbleRow({ message, outgoing }) {
+  let date = message && message.created_on && new Date(message.created_on);
+
+  // Create formatted text to show the timestamp for a message
+  let timestamp = 'no date' && date && `${date.getMonth() + 1}/${date.getDate()} ${date.getHours()}:${date.getMinutes()}`;
+
   return (
-    <MessageRow outgoing={message.outgoing}>
-      <MessageBubble outgoing={message.outgoing}>
+    <MessageRow outgoing={outgoing}>
+      <MessageBubble outgoing={outgoing}>
         <TimeStampText>
-          {(message.outgoing ? '' : message.author + '  ') + '11/20 12:34 PM'}
+          {(outgoing ? '' : message.author + '  ') + timestamp}
         </TimeStampText>
         <MessageText>
           {message ? message.text : 'No Message Text'}

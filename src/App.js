@@ -1,9 +1,10 @@
 import Messenger from './components/Messenger';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
-import firebase from 'firebase'
-import { FirebaseDatabaseProvider, FirebaseDatabaseNode, FirebaseDatabaseMutation } from '@react-firebase/database';
+import { firebase } from '@firebase/app';
+import 'firebase/database';
+import { FirebaseDatabaseProvider, FirebaseDatabaseNode } from '@react-firebase/database';
 import firebaseConfig from './firebaseConfig';
 
 const text_analytics_key = 'e99f8216303f4eb18ca6b145b9e3d7e2';
@@ -19,31 +20,9 @@ display: flex;
 `
 
 function App() {
-  const [messages, setMessages] = useState([]);
-  //   {
-  //     author: 'David',
-  //     text: 'Hey!',
-  //     outgoing: true,
-  //   },
-  //   {
-  //     author: 'Lucas',
-  //     text: 'Hello'
-  //   },
-  //   {
-  //     author: 'David',
-  //     text: 'Do you know where we saved the updated slide deck?',
-  //     outgoing: true,
-  //   },
-  //   {
-  //     author: 'Lucas',
-  //     text: 'Yea it\'s at slidedecks.com'
-  //   },
-  //   {
-  //     author: 'David',
-  //     text: 'Thanks!',
-  //     outgoing: true,
-  //   },
-  // ])
+  const [, setMessages] = useState([]);
+
+  const [username,] = useState(`User${('' + Date.now()).substring(9)}`);
 
   const analyzeMessage = (m) => {
     console.log(`Analyzing "${m}"`);
@@ -115,9 +94,6 @@ function App() {
       >
         {
           ({ path, value, isLoading }) => {
-
-            console.log(value);
-
             return (
               <Frame>
                 <Messenger
@@ -126,7 +102,7 @@ function App() {
                   setMessages={setMessages}
                   analyzeMessage={analyzeMessage}
                   suggestions={suggestions}
-                  me="David" />
+                  me={username} />
               </Frame>
             )
           }

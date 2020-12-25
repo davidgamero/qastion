@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 import { useState } from 'react';
-import { FirebaseDatabaseProvider, FirebaseDatabaseNode, FirebaseDatabaseMutation } from '@react-firebase/database';
 
 const InputForm = styled.form`
 width: 100%;
@@ -54,27 +53,33 @@ margin: 10px 0;
 margin-top: 0;
 `
 
-
-function MessageInput({ onChange, onSend, suggestedQA, pushMessage }) {
+function MessageInput({ onChange, suggestedQA, pushMessage, me }) {
   const [messageText, setMessageText] = useState('');
 
+  /**
+   * Callback for each time the text in the message input changes
+   */
   let handleChange = (e) => {
     if (e) setMessageText(e.target.value);
-
     onChange(e);
   }
 
+  /**
+   * Callback for pressing enter key in TextInput
+   * @param {*} e 
+   */
   let handleSubmit = (e) => {
+    // Block form submission by default since we want to process this in a custom way
     if (e) e.preventDefault();
 
     console.log('Sent');
     console.log(e);
-    onSend(messageText);
 
+    // Push new message to Firebase using Mutation method from props
     pushMessage({
       created_on: Date.now(),
       text: messageText,
-      author: "David",
+      author: 'no author' && me,
       replies: []
     })
   }

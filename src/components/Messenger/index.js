@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import MessageBubbleRow from '../MessageBubbleRow';
 import MessageInput from '../MessageInput';
 import { useState, useEffect } from 'react';
-import { FirebaseDatabaseProvider, FirebaseDatabaseNode, FirebaseDatabaseMutation } from '@react-firebase/database';
+import { FirebaseDatabaseMutation } from '@react-firebase/database';
 
 
 const MessengerFrame = styled.div`
@@ -19,18 +19,14 @@ flex-direction: row;
 justify-content: center;
 `
 
-function Messenger({ messages, setMessages, suggestions, analyzeMessage, isLoading }) {
+function Messenger({ messages, suggestions, isLoading, me }) {
 
   const [suggestedQA, setSuggestedQA] = useState();
   const [dbmessages, setDbmessages] = useState([]);
 
   useEffect(() => {
-    console.log('effect fired')
-    console.log(messages);
     if (!isLoading && messages) {
       setDbmessages(Object.keys(messages).map((k) => messages[k]));
-      console.log('parsed db messages');
-      console.log(messages);
     }
   }, [messages, isLoading]);
 
@@ -45,11 +41,9 @@ function Messenger({ messages, setMessages, suggestions, analyzeMessage, isLoadi
 
     let suggestionRanks = suggestions.map((s) => {
       let score = 0;
-      //console.log(s);
 
       if (!s.keywords) {
         console.log('No keywords on suggestion:');
-        //console.log(s);
         return 0;
       }
 
@@ -72,27 +66,18 @@ function Messenger({ messages, setMessages, suggestions, analyzeMessage, isLoadi
     }
   }
 
-  let sendMessage = (messageText) => {
-    //analyzeMessage(messageText);
-
-    setMessages((m) => {
-      return [...m, {
-        author: 'David',
-        text: messageText,
-        outgoing: true,
-      }];
-    });
-  }
-
   return (
     <MessengerFrame>
       {
         dbmessages.map(
           (message, i) => {
+            //console.log(`author=${message.author} me=${me} check=${message.author === me}`);
+
+            // Return a MessageBubbleRow for each object in the dbmessages array
             return <MessageBubbleRow
               key={i}
               message={message}
-              outgoing={message.outgoing ? message.outgoing : false} />
+              outgoing={message.author ? message.author === me : false} />
           }
         )
       }
@@ -101,13 +86,14 @@ function Messenger({ messages, setMessages, suggestions, analyzeMessage, isLoadi
           type="push"
           path={'messages/general'}>
           {({ runMutation }) => {
-            console.log('mutation loop render');
+            // Pass the runMutation method into the MessageInput to allow it to send messages
+            // runMutation pushes a new message to the general chat
             return (
               <MessageInput
                 onChange={textChange}
                 pushMessage={runMutation}
-                onSend={sendMessage}
                 suggestedQA={suggestedQA}
+                me={me}
               />
             );
           }}
