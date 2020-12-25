@@ -1,9 +1,6 @@
 import styled from 'styled-components';
 import { useState } from 'react';
-
-// const Container = styled.div`
-
-// `
+import { FirebaseDatabaseProvider, FirebaseDatabaseNode, FirebaseDatabaseMutation } from '@react-firebase/database';
 
 const InputForm = styled.form`
 width: 100%;
@@ -58,7 +55,7 @@ margin-top: 0;
 `
 
 
-function MessageInput({ onChange, onSend, suggestedQA }) {
+function MessageInput({ onChange, onSend, suggestedQA, pushMessage }) {
   const [messageText, setMessageText] = useState('');
 
   let handleChange = (e) => {
@@ -73,6 +70,13 @@ function MessageInput({ onChange, onSend, suggestedQA }) {
     console.log('Sent');
     console.log(e);
     onSend(messageText);
+
+    pushMessage({
+      created_on: Date.now(),
+      text: messageText,
+      author: "David",
+      replies: []
+    })
   }
 
   return (

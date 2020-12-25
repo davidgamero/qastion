@@ -1,5 +1,5 @@
 import Messenger from './components/Messenger';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
 import firebase from 'firebase'
@@ -19,31 +19,31 @@ display: flex;
 `
 
 function App() {
-  const [messages, setMessages] = useState([
-    {
-      author: 'David',
-      text: 'Hey!',
-      outgoing: true,
-    },
-    {
-      author: 'Lucas',
-      text: 'Hello'
-    },
-    {
-      author: 'David',
-      text: 'Do you know where we saved the updated slide deck?',
-      outgoing: true,
-    },
-    {
-      author: 'Lucas',
-      text: 'Yea it\'s at slidedecks.com'
-    },
-    {
-      author: 'David',
-      text: 'Thanks!',
-      outgoing: true,
-    },
-  ])
+  const [messages, setMessages] = useState([]);
+  //   {
+  //     author: 'David',
+  //     text: 'Hey!',
+  //     outgoing: true,
+  //   },
+  //   {
+  //     author: 'Lucas',
+  //     text: 'Hello'
+  //   },
+  //   {
+  //     author: 'David',
+  //     text: 'Do you know where we saved the updated slide deck?',
+  //     outgoing: true,
+  //   },
+  //   {
+  //     author: 'Lucas',
+  //     text: 'Yea it\'s at slidedecks.com'
+  //   },
+  //   {
+  //     author: 'David',
+  //     text: 'Thanks!',
+  //     outgoing: true,
+  //   },
+  // ])
 
   const analyzeMessage = (m) => {
     console.log(`Analyzing "${m}"`);
@@ -88,7 +88,7 @@ function App() {
       responseTimestamp: '11/6 8:34 AM'
     },
     {
-      keywords: ['saved', 'updated', 'update', 'slide', 'deck', 'location', 'located', 'stored'],
+      keywords: ['where', 'saved', 'updated', 'update', 'slide', 'deck', 'location', 'located', 'stored'],
       question: 'Do you know where we saved the updated slide deck?',
       response: 'Yea it\'s at slidedecks.com',
       responseAuthor: 'Lucas',
@@ -109,32 +109,30 @@ function App() {
       {...firebaseConfig}>
       <FirebaseDatabaseNode
         path="messages/general"
-        limitToFirst={5}
+        limitToFirst={50}
         // orderByKey
         orderByValue={"created_on"}
       >
         {
-          d => {
-            console.log(d);
-            return <p>{JSON.stringify(d)}</p>
+          ({ path, value, isLoading }) => {
+
+            console.log(value);
+
+            return (
+              <Frame>
+                <Messenger
+                  messages={value}
+                  isLoading={isLoading}
+                  setMessages={setMessages}
+                  analyzeMessage={analyzeMessage}
+                  suggestions={suggestions}
+                  me="David" />
+              </Frame>
+            )
           }
         }
       </FirebaseDatabaseNode>
-      <FirebaseDatabaseMutation type="push" path={'messages/general'}>
-        {({ runMutation }) => {
-          return (
-            <Frame>
-              <Messenger
-                messages={messages}
-                pushMessage={runMutation}
-                setMessages={setMessages}
-                analyzeMessage={analyzeMessage}
-                suggestions={suggestions}
-                me="David" />
-            </Frame>
-          );
-        }}
-      </FirebaseDatabaseMutation>
+
 
     </FirebaseDatabaseProvider>
   );

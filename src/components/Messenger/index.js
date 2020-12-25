@@ -1,7 +1,9 @@
 import styled from 'styled-components';
 import MessageBubbleRow from '../MessageBubbleRow';
 import MessageInput from '../MessageInput';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { FirebaseDatabaseProvider, FirebaseDatabaseNode, FirebaseDatabaseMutation } from '@react-firebase/database';
+
 
 const MessengerFrame = styled.div`
 background-color: #302c30;
@@ -17,9 +19,20 @@ flex-direction: row;
 justify-content: center;
 `
 
-function Messenger({ messages, setMessages, suggestions, analyzeMessage, pushMessage }) {
+function Messenger({ messages, setMessages, suggestions, analyzeMessage, isLoading }) {
 
   const [suggestedQA, setSuggestedQA] = useState();
+  const [dbmessages, setDbmessages] = useState([]);
+
+  useEffect(() => {
+    console.log('effect fired')
+    console.log(messages);
+    if (!isLoading && messages) {
+      setDbmessages(Object.keys(messages).map((k) => messages[k]));
+      console.log('parsed db messages');
+      console.log(messages);
+    }
+  }, [messages, isLoading]);
 
   let textChange = (newVal) => {
     let text = newVal.target.value;
@@ -69,19 +82,12 @@ function Messenger({ messages, setMessages, suggestions, analyzeMessage, pushMes
         outgoing: true,
       }];
     });
-
-    pushMessage({
-      created_on: Date.now(),
-      text: messageText,
-      author: "David",
-      replies: []
-    })
   }
 
   return (
     <MessengerFrame>
       {
-        messages.map(
+        dbmessages.map(
           (message, i) => {
             return <MessageBubbleRow
               key={i}
@@ -91,11 +97,22 @@ function Messenger({ messages, setMessages, suggestions, analyzeMessage, pushMes
         )
       }
       <InputContainer>
-        <MessageInput
-          onChange={textChange}
-          onSend={sendMessage}
-          suggestedQA={suggestedQA}
-        />
+        <FirebaseDatabaseMutation
+          type="push"
+          path={'messages/general'}>
+          {({ runMutation }) => {
+            console.log('mutation loop render');
+            return (
+              <MessageInput
+                onChange={textChange}
+                pushMessage={runMutation}
+                onSend={sendMessage}
+                suggestedQA={suggestedQA}
+              />
+            );
+          }}
+        </FirebaseDatabaseMutation>
+
       </InputContainer>
     </MessengerFrame >
   );
