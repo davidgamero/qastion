@@ -2,8 +2,7 @@ import styled from 'styled-components';
 import MessageBubbleRow from '../MessageBubbleRow';
 import MessageInput from '../MessageInput';
 import { useState, useEffect } from 'react';
-import { FirebaseDatabaseMutation } from '@react-firebase/database';
-
+import { firebase } from '@firebase/app';
 
 const MessengerFrame = styled.div`
 background-color: #302c30;
@@ -30,7 +29,22 @@ function Messenger({ messages, suggestions, isLoading, me }) {
     }
   }, [messages, isLoading]);
 
-  let textChange = (newVal) => {
+  // Mutation runner since FirebaseDatabaseMutation was breaking state rerendering props
+  // sourced from https://github.com/rakannimer/react-firebase/blob/master/modules/database/src/components/FirebaseDatabaseMutation.tsx
+  // issue documented at https://github.com/rakannimer/react-firebase/issues/14
+  const pushMessage = (value) => {
+    const path = 'messages/general';
+
+    const firebaseRef = firebase
+      .app()
+      .database()
+      .ref(path);
+
+    setSuggestedQA();
+    return firebaseRef.push(value);
+  }
+
+  const textChange = (newVal) => {
     let text = newVal.target.value;
 
     // Clean the question text
@@ -71,8 +85,6 @@ function Messenger({ messages, suggestions, isLoading, me }) {
       {
         dbmessages.map(
           (message, i) => {
-            //console.log(`author=${message.author} me=${me} check=${message.author === me}`);
-
             // Return a MessageBubbleRow for each object in the dbmessages array
             return <MessageBubbleRow
               key={i}
@@ -82,23 +94,12 @@ function Messenger({ messages, suggestions, isLoading, me }) {
         )
       }
       <InputContainer>
-        <FirebaseDatabaseMutation
-          type="push"
-          path={'messages/general'}>
-          {({ runMutation }) => {
-            // Pass the runMutation method into the MessageInput to allow it to send messages
-            // runMutation pushes a new message to the general chat
-            return (
-              <MessageInput
-                onChange={textChange}
-                pushMessage={runMutation}
-                suggestedQA={suggestedQA}
-                me={me}
-              />
-            );
-          }}
-        </FirebaseDatabaseMutation>
-
+        <MessageInput
+          onChange={textChange}
+          suggestedQA={suggestedQA}
+          pushMessage={pushMessage}
+          me={me}
+        />
       </InputContainer>
     </MessengerFrame >
   );

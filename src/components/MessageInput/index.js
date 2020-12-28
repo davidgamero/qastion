@@ -59,7 +59,7 @@ function MessageInput({ onChange, suggestedQA, pushMessage, me }) {
   /**
    * Callback for each time the text in the message input changes
    */
-  let handleChange = (e) => {
+  const handleChange = (e) => {
     if (e) setMessageText(e.target.value);
     onChange(e);
   }
@@ -68,7 +68,7 @@ function MessageInput({ onChange, suggestedQA, pushMessage, me }) {
    * Callback for pressing enter key in TextInput
    * @param {*} e 
    */
-  let handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     // Block form submission by default since we want to process this in a custom way
     if (e) e.preventDefault();
 
@@ -76,15 +76,15 @@ function MessageInput({ onChange, suggestedQA, pushMessage, me }) {
     console.log(e);
 
     // Push new message to Firebase using Mutation method from props
-    await pushMessage({
+    pushMessage({
       created_on: Date.now(),
       text: messageText,
       author: 'no author' && me,
       replies: []
+    }).then((r) => {
+      // Clear message input box on send
+      setMessageText('');
     })
-
-    // Clear message input box on send
-    setMessageText('');
   }
 
   return (
