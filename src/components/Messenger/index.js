@@ -30,6 +30,7 @@ const InputContainer = styled.div`
 display: flex;
 flex-direction: row;
 justify-content: center;
+padding-bottom: 10vh;
 `
 
 function Messenger({ messages, suggestions, isLoading, me }) {
