@@ -10,7 +10,21 @@ max-width: 700px;
 width: 100%;
 justify-content: center;
 justify-items: center;
+height: 100vh;
+display: flex;
+flex-direction: column;
 `;
+
+// Show messages in top portion of Messenger with most recent at bottom, and scrolling up
+const MessageRowsFrame = styled.div`
+overflow-y: scroll;
+display: flex;
+flex-direction: column-reverse;
+`
+
+// Extra wrapper to preserve order of messages instead of flipping them
+const MessageRowsContainer = styled.div`
+`
 
 const InputContainer = styled.div`
 display: flex;
@@ -82,17 +96,23 @@ function Messenger({ messages, suggestions, isLoading, me }) {
 
   return (
     <MessengerFrame>
-      {
-        dbmessages.map(
-          (message, i) => {
-            // Return a MessageBubbleRow for each object in the dbmessages array
-            return <MessageBubbleRow
-              key={i}
-              message={message}
-              outgoing={message.author ? message.author === me : false} />
+      <MessageRowsFrame>
+        <MessageRowsContainer>
+          {
+            dbmessages.map(
+              (message, i) => {
+                // Return a MessageBubbleRow for each object in the dbmessages array
+                return <MessageBubbleRow
+                  key={i}
+                  message={message}
+                  outgoing={message.author ? message.author === me : false} />
+              }
+            )
           }
-        )
-      }
+        </MessageRowsContainer>
+
+      </MessageRowsFrame>
+
       <InputContainer>
         <MessageInput
           onChange={textChange}
