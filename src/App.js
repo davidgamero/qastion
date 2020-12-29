@@ -17,6 +17,7 @@ align-items: center;
 justify-content: center;
 justify-items: center;
 display: flex;
+background-color: #5c585c;
 `
 
 function App() {
